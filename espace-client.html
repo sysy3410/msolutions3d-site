@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Espace client — MSolution</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="admin client-view">
+
+  <header class="admin-header">
+    <div class="container">
+      <a href="index.html" class="brand" style="text-decoration:none">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#gradMark)"/>
+          <path d="M12 34 V15 l8 11 4 -5.5 4 5.5 8 -11 V34" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="gradMark" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0d4f7a"/><stop offset="1" stop-color="#14b8a6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-name">MSolution</span>
+      </a>
+      <span class="admin-title">Espace client</span>
+      <button id="logoutBtn" class="btn-sm" hidden>Se déconnecter</button>
+    </div>
+  </header>
+
+  <!-- Connexion -->
+  <section id="loginView" class="container" hidden>
+    <div class="login-wrap">
+      <h1>Connexion</h1>
+      <p>Accédez au suivi de vos commandes, à vos factures et à votre messagerie.</p>
+      <div id="loginError" class="form-error"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Se connecter</button>
+      </form>
+      <p style="margin-top:1rem;text-align:center">
+        <a href="#" id="forgotLink" style="color:var(--turquoise-fonce)">Mot de passe oublié ?</a>
+      </p>
+      <div id="forgotBox" hidden style="margin-top:1rem">
+        <div class="field">
+          <label for="forgotEmail">Votre e-mail</label>
+          <input type="email" id="forgotEmail">
+        </div>
+        <button type="button" id="forgotBtn" class="btn-sm">Recevoir un lien de réinitialisation</button>
+        <p id="forgotMsg" class="hint"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tableau de bord -->
+  <main id="appView" class="admin-main container" hidden>
+    <div class="admin-toolbar">
+      <h1>Bonjour <span id="clientName"></span></h1>
+    </div>
+
+    <section class="admin-group">
+      <h2>📦 Mes commandes <span class="count" id="cOrders"></span></h2>
+      <div id="clientOrders"></div>
+    </section>
+
+    <section class="admin-group">
+      <h2>🧾 Mes factures <span class="count" id="cInvoices"></span></h2>
+      <div class="proj-list" id="clientInvoices"></div>
+    </section>
+
+    <section class="admin-group">
+      <h2>💬 Messagerie</h2>
+      <p class="hint" style="margin-bottom:0.6rem">Échangez directement avec MSolution. Vous serez notifié par e-mail de nos réponses.</p>
+      <div id="clientThread" class="msg-thread"></div>
+      <div id="clientMsgError" class="form-error"></div>
+      <form id="clientMsgForm">
+        <div class="field">
+          <textarea id="clientMsgBody" placeholder="Écrivez votre message…" required style="min-height:4rem"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+      </form>
+    </section>
+
+    <section class="admin-group">
+      <h2>🔑 Mon mot de passe</h2>
+      <div id="pwError" class="form-error"></div>
+      <p id="pwSuccess" class="hint" hidden style="color:#1c8b4f;font-weight:600">Mot de passe modifié avec succès.</p>
+      <form id="changePwForm" style="max-width:26rem">
+        <div class="field"><label for="curPw">Mot de passe actuel</label><input type="password" id="curPw" autocomplete="current-password" required></div>
+        <div class="field"><label for="newPw">Nouveau mot de passe</label><input type="password" id="newPw" autocomplete="new-password" required></div>
+        <div class="field"><label for="newPw2">Confirmer le nouveau mot de passe</label><input type="password" id="newPw2" autocomplete="new-password" required></div>
+        <p class="hint">8 caractères minimum, avec au moins une minuscule, une majuscule, un chiffre et un caractère spécial.</p>
+        <button type="submit" class="btn btn-primary">Changer mon mot de passe</button>
+      </form>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="js/espace-client.js"></script>
+</body>
+</html>

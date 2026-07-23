@@ -1,0 +1,38 @@
+# ============================================================
+#  Service systemd — lance l'application au démarrage et la
+#  redémarre automatiquement en cas de crash.
+#  À placer dans : /etc/systemd/system/msolution.service
+# ============================================================
+
+[Unit]
+Description=MSolution - application FastAPI
+After=network.target
+
+[Service]
+Type=simple
+User=msolution
+Group=msolution
+WorkingDirectory=/opt/msolution/site/backend
+
+# Variables d'environnement (e-mail admin + SMTP Brevo). chmod 600 !
+EnvironmentFile=/opt/msolution/site/deploiement/msolution.env
+
+# uvicorn derrière Caddy : --proxy-headers pour récupérer la vraie IP client
+# (indispensable pour que la limitation anti-force-brute soit correcte).
+ExecStart=/opt/msolution/site/backend/venv/bin/uvicorn app:app \
+    --app-dir /opt/msolution/site/backend \
+    --host 127.0.0.1 --port 8123 \
+    --proxy-headers --forwarded-allow-ips 127.0.0.1 \
+    --no-server-header
+
+Restart=always
+RestartSec=3
+
+# --- Durcissement du service ---
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Administration — MSolution</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="admin">
+
+  <header class="admin-header">
+    <div class="container">
+      <a href="index.html" class="brand" style="text-decoration:none">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#gradMark)"/>
+          <path d="M12 34 V15 l8 11 4 -5.5 4 5.5 8 -11 V34" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="gradMark" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0d4f7a"/><stop offset="1" stop-color="#14b8a6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-name">MSolution</span>
+      </a>
+      <span class="admin-title">Administration</span>
+      <button id="logoutBtn" class="btn-sm" hidden>Se déconnecter</button>
+    </div>
+  </header>
+
+  <!-- Connexion -->
+  <section id="loginView" class="container" hidden>
+    <div class="login-wrap">
+      <h1>Connexion</h1>
+      <p>Accès réservé. Identifiants administrateur.</p>
+      <div id="loginError" class="form-error"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Se connecter</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Application -->
+  <main id="appView" class="admin-main container" hidden>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="portfolio">Portfolio</button>
+      <button class="tab" data-tab="clients">Clients</button>
+      <button class="tab" data-tab="orders">Commandes</button>
+      <button class="tab" data-tab="invoices">Factures</button>
+      <button class="tab" data-tab="messages">Messages <span id="tabMsgBadge" class="tab-badge" hidden>0</span></button>
+      <button class="tab" data-tab="stock">Stock filament <span id="tabStockBadge" class="tab-badge" hidden>0</span></button>
+      <button class="tab" data-tab="calc">Coût 3D</button>
+      <button class="tab" data-tab="compta">Compta</button>
+      <button class="tab" data-tab="devprojects">Projets</button>
+      <button class="tab" data-tab="settings">Paramètres</button>
+    </nav>
+
+    <!-- Onglet Portfolio -->
+    <div class="tab-panel" data-panel="portfolio">
+      <div class="admin-toolbar">
+        <h1>Portfolio public</h1>
+        <button id="addBtn" class="btn btn-primary">+ Ajouter un projet</button>
+      </div>
+      <section class="admin-group">
+        <h2>Réalisations — Impression 3D <span class="count" id="count3d"></span></h2>
+        <div class="proj-list" id="list-impression3d"></div>
+      </section>
+      <section class="admin-group">
+        <h2>Projets — Logiciels &amp; applications <span class="count" id="countLog"></span></h2>
+        <div class="proj-list" id="list-logiciel"></div>
+      </section>
+    </div>
+
+    <!-- Onglet Clients -->
+    <div class="tab-panel" data-panel="clients" hidden>
+      <div class="admin-toolbar">
+        <h1>Comptes clients <span class="count" id="countClients"></span></h1>
+        <button id="addClientBtn" class="btn btn-primary">+ Ajouter un client</button>
+      </div>
+      <div class="proj-list" id="list-clients"></div>
+    </div>
+
+    <!-- Onglet Commandes -->
+    <div class="tab-panel" data-panel="orders" hidden>
+      <div id="orderListView">
+        <div class="admin-toolbar">
+          <h1>Commandes <span class="count" id="countOrders"></span></h1>
+          <button id="addOrderBtn" class="btn btn-primary">+ Nouvelle commande</button>
+        </div>
+        <div class="proj-list" id="list-orders"></div>
+      </div>
+      <div id="orderDetailView" hidden>
+        <button id="orderBackBtn" class="btn-sm" style="margin-bottom:1rem">← Retour aux commandes</button>
+        <div class="admin-toolbar">
+          <h1 id="orderDetailTitle"></h1>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <button id="orderEditBtn" class="btn-sm">Modifier</button>
+            <button id="orderGenDevis" class="btn btn-primary">Générer le devis</button>
+            <button id="orderGenFacture" class="btn btn-primary">Générer la facture</button>
+          </div>
+        </div>
+        <p id="orderDetailMeta" class="hint"></p>
+        <div style="display:flex;gap:0.5rem;align-items:center;margin:0.4rem 0 1.4rem">
+          <span class="hint">Statut :</span>
+          <select id="orderStatusSelect" style="padding:0.4rem 0.7rem;border:1px solid var(--bordure);border-radius:8px">
+            <option value="devis">Devis</option>
+            <option value="validee">Validée</option>
+            <option value="en_cours">En cours (production)</option>
+            <option value="controle">Contrôle</option>
+            <option value="terminee">Terminée</option>
+            <option value="annulee">Annulée</option>
+          </select>
+        </div>
+        <h2 style="font-size:1.05rem;color:var(--encre);margin-bottom:0.6rem">Détail chiffré</h2>
+        <div id="orderLinesView"></div>
+        <h2 style="font-size:1.05rem;color:var(--encre);margin:1.5rem 0 0.6rem">Documents (devis &amp; factures)</h2>
+        <div class="proj-list" id="orderDocs"></div>
+      </div>
+    </div>
+
+    <!-- Onglet Factures -->
+    <div class="tab-panel" data-panel="invoices" hidden>
+      <div class="admin-toolbar">
+        <h1>Factures <span class="count" id="countInvoices"></span></h1>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+          <button id="genInvoiceBtn" class="btn btn-primary">+ Générer une facture</button>
+          <button id="addInvoiceBtn" class="btn-sm">Importer un PDF</button>
+        </div>
+      </div>
+      <div class="proj-list" id="list-invoices"></div>
+    </div>
+
+    <!-- Onglet Messages -->
+    <div class="tab-panel" data-panel="messages" hidden>
+      <div class="admin-toolbar">
+        <h1>Messagerie <span class="count" id="countThreads"></span></h1>
+      </div>
+      <div class="proj-list" id="list-threads"></div>
+    </div>
+
+    <!-- Onglet Stock filament -->
+    <div class="tab-panel" data-panel="stock" hidden>
+      <div class="admin-toolbar">
+        <h1>Stock de filament <span class="count" id="countStock"></span></h1>
+        <button id="addSpoolBtn" class="btn btn-primary">+ Ajouter une bobine</button>
+      </div>
+      <div class="proj-list" id="list-stock"></div>
+    </div>
+
+    <!-- Onglet Calculateur coût 3D -->
+    <div class="tab-panel" data-panel="calc" hidden>
+      <div class="admin-toolbar"><h1>Calculateur de coût de production 3D</h1></div>
+      <p class="hint" style="margin-bottom:1.2rem">Estimez le coût de revient et le prix de vente conseillé d'une impression. Le coût matière est repris de votre stock de filament.</p>
+      <div class="calc-grid">
+        <form id="calcForm" class="calc-inputs">
+          <p class="calc-legend">Impression</p>
+          <div class="field">
+            <label for="calcSpool">Filament utilisé</label>
+            <select id="calcSpool"></select>
+          </div>
+          <div style="display:flex;gap:0.8rem">
+            <div class="field" style="flex:1"><label for="calcFilamentKg">Coût filament (€/kg)</label><input type="text" id="calcFilamentKg" placeholder="ex. 22,90"></div>
+            <div class="field" style="flex:1"><label for="calcWeight">Poids utilisé (g)</label><input type="text" id="calcWeight" placeholder="ex. 85"></div>
+          </div>
+          <div class="field"><label for="calcPrintTime">Temps d'impression (heures)</label><input type="text" id="calcPrintTime" placeholder="ex. 6,5"></div>
+
+          <p class="calc-legend">Machine &amp; énergie</p>
+          <div style="display:flex;gap:0.8rem">
+            <div class="field" style="flex:1"><label for="calcPower">Puissance (W)</label><input type="text" id="calcPower"></div>
+            <div class="field" style="flex:1"><label for="calcElec">Électricité (€/kWh)</label><input type="text" id="calcElec"></div>
+            <div class="field" style="flex:1"><label for="calcMachine">Usure machine (€/h)</label><input type="text" id="calcMachine"></div>
+          </div>
+
+          <p class="calc-legend">Main d'œuvre &amp; marge</p>
+          <div style="display:flex;gap:0.8rem">
+            <div class="field" style="flex:1"><label for="calcLaborTime">Temps main d'œuvre (h)</label><input type="text" id="calcLaborTime" placeholder="ex. 0,5"></div>
+            <div class="field" style="flex:1"><label for="calcLaborRate">Taux horaire (€/h)</label><input type="text" id="calcLaborRate"></div>
+          </div>
+          <div style="display:flex;gap:0.8rem">
+            <div class="field" style="flex:1"><label for="calcFailure">Provision échec (%)</label><input type="text" id="calcFailure"></div>
+            <div class="field" style="flex:1"><label for="calcMargin">Marge commerciale (%)</label><input type="text" id="calcMargin"></div>
+          </div>
+          <button type="button" id="calcSaveDefaults" class="btn-sm">Enregistrer ces réglages par défaut</button>
+        </form>
+        <div class="calc-result" id="calcResult"></div>
+      </div>
+    </div>
+
+    <!-- Onglet Comptabilité / contrôle de gestion -->
+    <div class="tab-panel" data-panel="compta" hidden>
+      <div class="admin-toolbar">
+        <h1>Contrôle de gestion</h1>
+        <div class="compta-period">
+          <span class="hint">Période&nbsp;:</span>
+          <select id="comptaGran">
+            <option value="all">Tout</option>
+            <option value="year">Année</option>
+            <option value="month">Mois</option>
+            <option value="week">Semaine</option>
+          </select>
+          <select id="comptaYear" hidden></select>
+          <input type="month" id="comptaMonth" hidden>
+          <input type="week" id="comptaWeek" hidden>
+        </div>
+      </div>
+      <div id="accountingBox"></div>
+
+      <div class="admin-toolbar" style="margin-top:2.2rem">
+        <h2 style="border:none;margin:0;padding:0">Dépenses / charges <span class="count" id="countExpenses"></span></h2>
+        <button id="addExpenseBtn" class="btn btn-primary">+ Ajouter une dépense</button>
+      </div>
+      <div class="proj-list" id="list-expenses"></div>
+    </div>
+
+    <!-- Onglet Projets (Gantt) -->
+    <div class="tab-panel" data-panel="devprojects" hidden>
+      <div id="devListView">
+        <div class="admin-toolbar">
+          <h1>Projets de développement <span class="count" id="countDevProjects"></span></h1>
+          <button id="addDevProjectBtn" class="btn btn-primary">+ Nouveau projet</button>
+        </div>
+        <div class="proj-list" id="list-devprojects"></div>
+      </div>
+      <div id="devDetailView" hidden>
+        <button id="devBackBtn" class="btn-sm" style="margin-bottom:1rem">← Retour aux projets</button>
+        <div class="admin-toolbar">
+          <h1 id="devDetailName"></h1>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <button id="editDevProjectBtn" class="btn-sm">Modifier le projet</button>
+            <button id="addDevTaskBtn" class="btn btn-primary">+ Ajouter une tâche</button>
+          </div>
+        </div>
+        <p id="devDetailMeta" class="hint"></p>
+        <div id="ganttContainer"></div>
+        <h2 style="margin-top:1.6rem;font-size:1.1rem;color:var(--encre)">Tâches</h2>
+        <div class="proj-list" id="list-devtasks"></div>
+      </div>
+    </div>
+
+    <!-- Onglet Paramètres -->
+    <div class="tab-panel" data-panel="settings" hidden>
+      <div class="admin-toolbar"><h1>Paramètres de facturation</h1></div>
+      <p class="hint" style="margin-bottom:1.2rem">Ces informations apparaissent sur vos factures générées. Complétez-les avant d'émettre votre première facture.</p>
+      <div id="settingsError" class="form-error"></div>
+      <form id="settingsForm" style="max-width:44rem">
+        <div class="field"><label for="setName">Nom / raison sociale</label><input type="text" id="setName"></div>
+        <div class="field"><label for="setLegal">Forme juridique <span class="hint">(ex. Entreprise individuelle, SASU…)</span></label><input type="text" id="setLegal"></div>
+        <div class="field"><label for="setAddress">Adresse</label><input type="text" id="setAddress"></div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:0 0 8rem"><label for="setCP">Code postal</label><input type="text" id="setCP"></div>
+          <div class="field" style="flex:1"><label for="setCity">Ville</label><input type="text" id="setCity"></div>
+        </div>
+        <div class="field"><label for="setSiret">SIRET</label><input type="text" id="setSiret"></div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:1"><label for="setApe">Code APE</label><input type="text" id="setApe"></div>
+          <div class="field" style="flex:1"><label for="setRcs">RCS <span class="hint">(sociétés)</span></label><input type="text" id="setRcs"></div>
+        </div>
+        <div class="field"><label for="setCapital">Capital social <span class="hint">(sociétés)</span></label><input type="text" id="setCapital"></div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:1"><label for="setEmail">E-mail</label><input type="text" id="setEmail"></div>
+          <div class="field" style="flex:1"><label for="setPhone">Téléphone</label><input type="text" id="setPhone"></div>
+        </div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:1"><label for="setIban">IBAN</label><input type="text" id="setIban"></div>
+          <div class="field" style="flex:0 0 10rem"><label for="setBic">BIC</label><input type="text" id="setBic"></div>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--bordure);margin:1.2rem 0">
+        <div class="field">
+          <label style="font-weight:400"><input type="checkbox" id="setVatApplicable"> Je facture avec TVA</label>
+          <p class="hint">Décoché = micro-entreprise / franchise en base (mention « TVA non applicable, art. 293 B du CGI » ajoutée automatiquement).</p>
+        </div>
+        <div class="field" style="max-width:12rem"><label for="setVatRate">Taux de TVA par défaut (%)</label><input type="text" id="setVatRate" value="20"></div>
+        <div class="field"><label for="setPayTerms">Conditions de règlement</label><input type="text" id="setPayTerms"></div>
+        <div class="field"><label for="setPenalty">Mentions de pénalités de retard</label><textarea id="setPenalty"></textarea></div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:0 0 8rem"><label for="setPrefix">Préfixe n° facture</label><input type="text" id="setPrefix" value="F-"></div>
+          <div class="field" style="flex:0 0 12rem"><label for="setNextNum">Prochain n°</label><input type="number" id="setNextNum" value="1" min="1"></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer les paramètres</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Modale projet -->
+  <div id="modal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">Ajouter un projet</h2>
+      <div id="formError" class="form-error"></div>
+      <form id="projectForm">
+        <input type="hidden" id="projectId">
+        <div class="field">
+          <label for="type">Type de projet</label>
+          <select id="type">
+            <option value="impression3d">Réalisation — Impression 3D</option>
+            <option value="logiciel">Projet — Logiciel &amp; application</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="title">Titre</label>
+          <input type="text" id="title" required maxlength="120">
+        </div>
+        <div class="field" data-only="logiciel">
+          <label for="subtitle">Sous-titre / accroche</label>
+          <input type="text" id="subtitle" maxlength="140">
+        </div>
+        <div class="field">
+          <label for="description">Description</label>
+          <textarea id="description" maxlength="600"></textarea>
+        </div>
+        <div class="field" data-only="impression3d">
+          <label for="tags">Étiquettes <span class="hint">(séparées par des virgules)</span></label>
+          <input type="text" id="tags" placeholder="PLA, Relief 3D, Sur mesure">
+        </div>
+        <div class="field" data-only="logiciel">
+          <label for="features">Points clés <span class="hint">(un par ligne)</span></label>
+          <textarea id="features"></textarea>
+        </div>
+        <div class="field">
+          <label for="image">Image <span class="hint">(facultative — jpg, png, webp, max 5 Mo)</span></label>
+          <input type="file" id="image" accept=".jpg,.jpeg,.png,.webp">
+          <div id="imagePreviewWrap" hidden>
+            <img id="imagePreview" class="preview-img" alt="Aperçu">
+            <div class="field" style="margin-top:0.5rem">
+              <label style="font-weight:400"><input type="checkbox" id="removeImage"> Retirer l'image actuelle</label>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="position">Ordre d'affichage <span class="hint">(0 = en premier)</span></label>
+          <input type="number" id="position" value="0" min="0" step="1" style="max-width:8rem">
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale client -->
+  <div id="clientModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="clientModalTitle">
+      <h2 id="clientModalTitle">Ajouter un client</h2>
+      <div id="clientError" class="form-error"></div>
+      <form id="clientForm">
+        <input type="hidden" id="clientId">
+        <div class="field">
+          <label for="clientEmail">E-mail <span class="hint">(identifiant de connexion)</span></label>
+          <input type="email" id="clientEmail" required>
+        </div>
+        <div class="field"><label for="clientName">Nom du contact</label><input type="text" id="clientName"></div>
+        <div class="field"><label for="clientCompany">Société</label><input type="text" id="clientCompany"></div>
+        <div class="field"><label for="clientPhone">Téléphone</label><input type="text" id="clientPhone"></div>
+        <div class="field" id="clientInviteField">
+          <label style="font-weight:400"><input type="checkbox" id="clientInvite" checked>
+            Envoyer un e-mail d'invitation (définition du mot de passe)</label>
+          <p class="hint">Sinon, un mot de passe provisoire sera généré et affiché.</p>
+        </div>
+        <div class="field" id="clientActiveField" hidden>
+          <label style="font-weight:400"><input type="checkbox" id="clientActive" checked> Compte actif</label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="clientCancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale commande -->
+  <div id="orderModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+      <h2 id="orderModalTitle">Nouvelle commande</h2>
+      <div id="orderError" class="form-error"></div>
+      <form id="orderForm">
+        <input type="hidden" id="orderId">
+        <div class="field">
+          <label for="orderClient">Client</label>
+          <select id="orderClient" required></select>
+        </div>
+        <div class="field"><label for="orderTitle">Titre / objet</label><input type="text" id="orderTitle" required maxlength="140"></div>
+        <div class="field"><label for="orderRef">Référence <span class="hint">(facultatif)</span></label><input type="text" id="orderRef" maxlength="40"></div>
+        <div class="field">
+          <label for="orderCategory">Type</label>
+          <select id="orderCategory">
+            <option value="impression3d">Impression 3D</option>
+            <option value="dev">Développement</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="orderStatus">Statut</label>
+          <select id="orderStatus">
+            <option value="devis">Devis</option>
+            <option value="validee">Validée</option>
+            <option value="en_cours">En cours</option>
+            <option value="controle">Contrôle</option>
+            <option value="terminee">Terminée</option>
+            <option value="annulee">Annulée</option>
+          </select>
+        </div>
+        <label style="font-weight:600;font-size:0.9rem;display:block;margin-bottom:0.4rem">Lignes (désignation · quantité · prix unitaire HT)</label>
+        <div id="orderLines"></div>
+        <button type="button" id="orderAddLine" class="btn-sm" style="margin:0.3rem 0 0.6rem">+ Ajouter une ligne</button>
+        <p class="hint" id="orderTotalPreview"></p>
+        <div class="field" id="orderVatField" hidden style="max-width:12rem"><label for="orderVat">Taux de TVA (%)</label><input type="text" id="orderVat"></div>
+        <div class="field"><label for="orderDue">Échéance <span class="hint">(facultatif)</span></label><input type="date" id="orderDue"></div>
+        <div class="field"><label for="orderDesc">Description</label><textarea id="orderDesc" maxlength="1000"></textarea></div>
+        <div class="modal-actions">
+          <button type="button" id="orderCancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale facture -->
+  <div id="invoiceModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="invoiceModalTitle">
+      <h2 id="invoiceModalTitle">Nouvelle facture</h2>
+      <div id="invoiceError" class="form-error"></div>
+      <form id="invoiceForm">
+        <div class="field">
+          <label for="invoiceClient">Client</label>
+          <select id="invoiceClient" required></select>
+        </div>
+        <div class="field"><label for="invoiceNumber">Numéro de facture</label><input type="text" id="invoiceNumber" maxlength="40"></div>
+        <div class="field"><label for="invoiceLabel">Libellé <span class="hint">(facultatif)</span></label><input type="text" id="invoiceLabel" maxlength="140"></div>
+        <div class="field"><label for="invoiceAmount">Montant <span class="hint">(ex. 120,00 €)</span></label><input type="text" id="invoiceAmount" maxlength="40"></div>
+        <div class="field"><label for="invoiceDate">Date d'émission</label><input type="date" id="invoiceDate"></div>
+        <div class="field">
+          <label for="invoiceFile">Fichier PDF <span class="hint">(max 15 Mo)</span></label>
+          <input type="file" id="invoiceFile" accept="application/pdf,.pdf">
+        </div>
+        <p class="hint">La génération automatique de factures conformes arrivera en Phase 4. Pour l'instant, déposez un PDF.</p>
+        <div class="modal-actions">
+          <button type="button" id="invoiceCancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale conversation -->
+  <div id="msgModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="msgModalTitle">
+      <h2 id="msgModalTitle">Conversation</h2>
+      <div id="msgThread" class="msg-thread"></div>
+      <div id="msgError" class="form-error"></div>
+      <form id="msgForm">
+        <div class="field">
+          <textarea id="msgBody" placeholder="Votre réponse…" required style="min-height:4rem"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="msgCloseBtn" class="btn-sm">Fermer</button>
+          <button type="submit" class="btn btn-primary">Envoyer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale bobine de filament -->
+  <div id="spoolModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="spoolModalTitle">
+      <h2 id="spoolModalTitle">Ajouter une bobine</h2>
+      <div id="spoolError" class="form-error"></div>
+      <form id="spoolForm">
+        <input type="hidden" id="spoolId">
+        <div class="field">
+          <label for="spoolMaterial">Matière</label>
+          <input type="text" id="spoolMaterial" list="matList" placeholder="PLA, PETG, ABS…">
+          <datalist id="matList">
+            <option value="PLA"></option><option value="PETG"></option><option value="ABS"></option>
+            <option value="TPU"></option><option value="Nylon PA"></option>
+          </datalist>
+        </div>
+        <div class="field"><label for="spoolColor">Couleur</label><input type="text" id="spoolColor"></div>
+        <div class="field"><label for="spoolBrand">Marque</label><input type="text" id="spoolBrand"></div>
+        <div class="field"><label for="spoolTotal">Poids total (g)</label><input type="number" id="spoolTotal" value="1000" min="0"></div>
+        <div class="field"><label for="spoolRemaining">Poids restant (g) <span class="hint">(vide = plein)</span></label><input type="number" id="spoolRemaining" min="0"></div>
+        <div class="field"><label for="spoolThreshold">Seuil d'alerte stock bas (g)</label><input type="number" id="spoolThreshold" value="150" min="0"></div>
+        <div class="field"><label for="spoolCost">Prix d'achat</label><input type="text" id="spoolCost" placeholder="ex. 22,90 €"></div>
+        <div class="field"><label for="spoolSupplier">Fournisseur</label><input type="text" id="spoolSupplier"></div>
+        <div class="field"><label for="spoolDate">Date d'achat</label><input type="date" id="spoolDate"></div>
+        <div class="field"><label for="spoolNotes">Notes</label><textarea id="spoolNotes"></textarea></div>
+        <div class="modal-actions">
+          <button type="button" id="spoolCancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale dépense -->
+  <div id="expenseModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="expenseModalTitle">
+      <h2 id="expenseModalTitle">Ajouter une dépense</h2>
+      <div id="expenseError" class="form-error"></div>
+      <form id="expenseForm">
+        <input type="hidden" id="expenseId">
+        <div class="field"><label for="expenseLabel">Libellé</label><input type="text" id="expenseLabel" required></div>
+        <div class="field">
+          <label for="expenseCategory">Activité concernée</label>
+          <select id="expenseCategory">
+            <option value="impression3d">Impression 3D</option>
+            <option value="dev">Développement</option>
+            <option value="general">Général (charges communes)</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="field"><label for="expenseAmount">Montant</label><input type="text" id="expenseAmount" placeholder="ex. 49,90 €"></div>
+        <div class="field"><label for="expenseDate">Date</label><input type="date" id="expenseDate"></div>
+        <div class="field"><label for="expenseNotes">Notes</label><textarea id="expenseNotes"></textarea></div>
+        <div class="modal-actions">
+          <button type="button" id="expenseCancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale génération de facture -->
+  <div id="invoiceGenModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="invoiceGenTitle">
+      <h2 id="invoiceGenTitle">Générer une facture</h2>
+      <div id="invoiceGenError" class="form-error"></div>
+      <form id="invoiceGenForm">
+        <div class="field"><label for="genClient">Client</label><select id="genClient" required></select></div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:1"><label for="genIssued">Date d'émission</label><input type="date" id="genIssued"></div>
+          <div class="field" style="flex:1"><label for="genDue">Échéance</label><input type="date" id="genDue"></div>
+        </div>
+        <div class="field" id="genVatField" hidden style="max-width:12rem"><label for="genVat">Taux de TVA (%)</label><input type="text" id="genVat"></div>
+        <div class="field"><label for="genLabel">Libellé interne <span class="hint">(facultatif)</span></label><input type="text" id="genLabel"></div>
+
+        <label style="font-weight:600;font-size:0.9rem;display:block;margin-bottom:0.4rem">Lignes de facturation</label>
+        <div id="genLines"></div>
+        <button type="button" id="genAddLine" class="btn-sm" style="margin:0.3rem 0 1rem">+ Ajouter une ligne</button>
+        <p class="hint" id="genTotalPreview"></p>
+
+        <div class="modal-actions">
+          <button type="button" id="genCancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Générer la facture PDF</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale projet dev -->
+  <div id="devProjectModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="devProjectTitle">
+      <h2 id="devProjectTitle">Nouveau projet</h2>
+      <div id="devProjectError" class="form-error"></div>
+      <form id="devProjectForm">
+        <input type="hidden" id="devProjectId">
+        <div class="field"><label for="dpName">Nom du projet</label><input type="text" id="dpName" required></div>
+        <div class="field"><label for="dpClient">Client <span class="hint">(facultatif)</span></label><select id="dpClient"></select></div>
+        <div class="field"><label for="dpStatus">Statut</label>
+          <select id="dpStatus">
+            <option value="en_cours">En cours</option>
+            <option value="en_pause">En pause</option>
+            <option value="termine">Terminé</option>
+            <option value="annule">Annulé</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:1"><label for="dpStart">Début</label><input type="date" id="dpStart"></div>
+          <div class="field" style="flex:1"><label for="dpEnd">Fin prévue</label><input type="date" id="dpEnd"></div>
+        </div>
+        <div class="field"><label for="dpDesc">Description</label><textarea id="dpDesc"></textarea></div>
+        <div class="modal-actions">
+          <button type="button" id="dpCancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale tâche dev -->
+  <div id="devTaskModal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="devTaskTitle">
+      <h2 id="devTaskTitle">Ajouter une tâche</h2>
+      <div id="devTaskError" class="form-error"></div>
+      <form id="devTaskForm">
+        <input type="hidden" id="dtId">
+        <div class="field"><label for="dtName">Nom de la tâche</label><input type="text" id="dtName" required></div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:1"><label for="dtStart">Début</label><input type="date" id="dtStart"></div>
+          <div class="field" style="flex:1"><label for="dtEnd">Fin</label><input type="date" id="dtEnd"></div>
+        </div>
+        <div style="display:flex;gap:0.8rem">
+          <div class="field" style="flex:1"><label for="dtStatus">Statut</label>
+            <select id="dtStatus">
+              <option value="a_faire">À faire</option>
+              <option value="en_cours">En cours</option>
+              <option value="termine">Terminé</option>
+            </select>
+          </div>
+          <div class="field" style="flex:1"><label for="dtProgress">Avancement (%)</label><input type="number" id="dtProgress" min="0" max="100" value="0"></div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="dtCancelBtn" class="btn-sm">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="js/admin.js"></script>
+</body>
+</html>

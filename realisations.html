@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toutes nos réalisations 3D — MSolution 3D</title>
+  <meta name="description" content="La galerie complète des réalisations d'impression et de modélisation 3D de MSolution 3D : pièces techniques, prototypes, objets personnalisés et cartes 3D en relief.">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+  <!-- ===== En-tête / Navigation ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#gradMark)"/>
+          <path d="M12 34 V15 l8 11 4 -5.5 4 5.5 8 -11 V34" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="gradMark" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0d4f7a"/>
+              <stop offset="1" stop-color="#14b8a6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-name">MSolution</span>
+      </a>
+
+      <nav class="main-nav" id="mainNav" aria-label="Navigation principale">
+        <a href="logiciels.html">Logiciels &amp; applis</a>
+        <a href="impression-3d.html" class="nav-active">Impression 3D</a>
+        <a href="index.html#apropos">À propos</a>
+        <a href="impression-3d.html#contact">Contact</a>
+        <a href="espace-client.html">Espace client</a>
+        <a href="impression-3d.html#contact" class="btn btn-primary btn-nav">Demander un devis</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <p class="section-kicker">Réalisations</p>
+        <h2 class="section-title">Toutes nos réalisations</h2>
+        <p style="max-width:42rem;margin:-1rem 0 2rem;color:var(--texte-doux)">
+          L'ensemble de nos créations en impression et modélisation 3D. Cliquez sur une image pour l'agrandir.
+        </p>
+
+        <div class="cards-3col portfolio-grid" id="portfolio-impression3d" data-portfolio="impression3d"></div>
+        <p class="portfolio-empty" hidden>Nos premières réalisations seront présentées ici très bientôt.</p>
+
+        <p style="margin-top:2.5rem">
+          <a href="impression-3d.html" class="btn btn-ghost">← Retour à l'impression 3D</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Pied de page ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> MSolution — Tous droits réservés.</p>
+      <nav aria-label="Liens de pied de page">
+        <a href="index.html">Accueil</a>
+        <a href="impression-3d.html">Impression 3D</a>
+        <a href="logiciels.html">Logiciels</a>
+        <a href="mentions-legales.html">Mentions légales</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/portfolio.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# ============================================================
+#  Caddy — reverse proxy + HTTPS automatique (Let's Encrypt)
+#  À placer dans : /etc/caddy/Caddyfile
+#  Remplacez "msolutions3d.fr" par VOTRE domaine.
+# ============================================================
+
+msolutions3d.fr, www.msolutions3d.fr {
+    # Compression des réponses
+    encode gzip zstd
+
+    # Transmet tout à l'application FastAPI (uvicorn) en local
+    reverse_proxy 127.0.0.1:8123
+
+    # Journaux d'accès
+    log {
+        output file /var/log/caddy/msolution.log {
+            roll_size 10MiB
+            roll_keep 5
+        }
+    }
+}
+
+# Caddy obtient et renouvelle automatiquement le certificat HTTPS.
+# Prérequis : l'enregistrement DNS "A" du domaine pointe vers l'IP du VPS,
+# et les ports 80 et 443 sont ouverts.

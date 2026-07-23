@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Définir un mot de passe — MSolution</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="admin">
+
+  <header class="admin-header">
+    <div class="container">
+      <a href="index.html" class="brand" style="text-decoration:none">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#gradMark)"/>
+          <path d="M12 34 V15 l8 11 4 -5.5 4 5.5 8 -11 V34" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="gradMark" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0d4f7a"/><stop offset="1" stop-color="#14b8a6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-name">MSolution</span>
+      </a>
+      <span class="admin-title">Définir un mot de passe</span>
+    </div>
+  </header>
+
+  <section class="container">
+    <div class="login-wrap">
+      <h1>Nouveau mot de passe</h1>
+      <p>8 caractères minimum, avec au moins une minuscule, une majuscule, un chiffre et un caractère spécial.</p>
+      <div id="msg" class="form-error"></div>
+      <form id="resetForm">
+        <div class="field">
+          <label for="pw1">Mot de passe</label>
+          <input type="password" id="pw1" autocomplete="new-password" required minlength="8">
+        </div>
+        <div class="field">
+          <label for="pw2">Confirmez le mot de passe</label>
+          <input type="password" id="pw2" autocomplete="new-password" required minlength="8">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Enregistrer</button>
+      </form>
+      <p id="done" hidden style="margin-top:1rem;text-align:center">
+        Mot de passe enregistré. <a href="espace-client.html" style="color:var(--turquoise-fonce)">Se connecter</a>
+      </p>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const token = params.get("token") || "";
+      const msg = document.getElementById("msg");
+      if (!token) { msg.textContent = "Lien invalide : jeton manquant."; }
+
+      document.getElementById("resetForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        msg.textContent = "";
+        const pw1 = document.getElementById("pw1").value;
+        const pw2 = document.getElementById("pw2").value;
+        if (pw1 !== pw2) { msg.textContent = "Les mots de passe ne correspondent pas."; return; }
+        const fd = new FormData();
+        fd.append("token", token);
+        fd.append("password", pw1);
+        try {
+          const res = await fetch("/api/auth/password-reset/confirm", { method: "POST", body: fd });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.detail || "Erreur.");
+          document.getElementById("resetForm").hidden = true;
+          document.getElementById("done").hidden = false;
+        } catch (err) {
+          msg.textContent = err.message;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

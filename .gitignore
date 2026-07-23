@@ -1,0 +1,35 @@
+# ============================================================
+#  Fichiers à NE PAS versionner / NE PAS déployer.
+#  → Les données de production restent sur le serveur et ne sont
+#    jamais écrasées lors d'une mise à jour du code.
+# ============================================================
+
+# Environnement Python (recréé sur chaque machine)
+backend/venv/
+**/__pycache__/
+*.pyc
+
+# DONNÉES DE PRODUCTION (base, factures privées, clé secrète, compte admin)
+backend/data/
+
+# Images téléversées par l'admin (portfolio)
+assets/uploads/
+
+# Config serveur contenant des secrets (SMTP…)
+deploiement/msolution.env
+
+# Fichiers d'aperçu temporaires
+assets/_apercu-*
+
+# Fichiers système (Windows / macOS)
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Filets de sécurité : ne JAMAIS versionner de secrets
+*.env
+!deploiement/msolution.env.example
+*.secret_key
+**/.secret_key
+*.pem
+*.key
