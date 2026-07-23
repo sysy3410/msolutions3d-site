@@ -509,113 +509,129 @@ img { max-width: 100%; display: block; }
 /* ============ Animations des cartes pôles (accueil) ============ */
 .pole-anim { position: relative; overflow: hidden; }
 
-/* -- Impression 3D : un objet se construit couche par couche -- */
+/* -- Impression 3D : construction technique, couches fines -- */
 .anim-print {
   background:
-    radial-gradient(ellipse 85% 70% at 78% 6%, rgba(20, 184, 166, 0.30), transparent),
+    radial-gradient(ellipse 85% 70% at 78% 6%, rgba(20, 184, 166, 0.26), transparent),
     linear-gradient(150deg, var(--bleu-fonce), var(--bleu));
 }
+.anim-print .bp-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 20px 20px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 52%, #000 55%, transparent);
+          mask-image: radial-gradient(ellipse 80% 80% at 50% 52%, #000 55%, transparent);
+}
 .anim-print .print-rail {
-  position: absolute; left: 42px; right: 42px; top: 48px; height: 3px;
-  background: rgba(255, 255, 255, 0.20); border-radius: 3px;
+  position: absolute; left: 46px; right: 46px; top: 44px; height: 2px;
+  background: rgba(255, 255, 255, 0.22);
 }
 .anim-print .print-head {
-  position: absolute; top: 40px; left: 50%; width: 30px; height: 18px; margin-left: -15px;
-  background: rgba(255, 255, 255, 0.62); border-radius: 4px;
-  animation: printHead 2.1s ease-in-out infinite;
+  position: absolute; top: 34px; left: 50%; width: 20px; height: 13px; margin-left: -10px;
+  background: rgba(255, 255, 255, 0.55); border-radius: 3px;
+  animation: printHead 2.2s ease-in-out infinite;
 }
 .anim-print .print-head::after {
-  content: ""; position: absolute; left: 50%; bottom: -8px; margin-left: -6px;
-  border-left: 6px solid transparent; border-right: 6px solid transparent;
-  border-top: 8px solid #3ee6c9;
+  content: ""; position: absolute; left: 50%; bottom: -7px; margin-left: -1px;
+  width: 2px; height: 7px; background: #3ee6c9;
 }
 .anim-print .print-plate {
-  position: absolute; bottom: 32px; left: 50%; width: 152px; height: 6px; margin-left: -76px;
-  background: rgba(255, 255, 255, 0.20); border-radius: 3px;
+  position: absolute; bottom: 30px; left: 50%; width: 150px; height: 4px; margin-left: -75px;
+  background: rgba(255, 255, 255, 0.28); border-radius: 2px;
 }
 .anim-print .print-stack {
-  position: absolute; bottom: 38px; left: 50%; width: 92px; margin-left: -46px;
+  position: absolute; bottom: 34px; left: 50%; width: 80px; margin-left: -40px;
   height: 0; overflow: hidden;
-  animation: printBuild 4.4s ease-in-out infinite;
+  animation: printBuild 4.6s ease-in-out infinite;
+}
+.anim-print .print-stack::after {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: #b9fbef; box-shadow: 0 0 8px 1px rgba(62, 230, 201, 0.7);
 }
 .anim-print .print-inner {
   position: absolute; left: 0; bottom: 0; width: 100%;
-  display: flex; flex-direction: column-reverse; align-items: center; gap: 2px;
+  display: flex; flex-direction: column-reverse; align-items: center; gap: 1.5px;
 }
-.anim-print .pl {
-  height: 9px; border-radius: 2px;
-  background: linear-gradient(90deg, #8be9d5, #d7f2ec);
-  box-shadow: 0 0 6px rgba(62, 230, 201, 0.35);
+.anim-print .print-inner i {
+  height: 2px; border-radius: 1px;
+  background: rgba(139, 233, 213, 0.9);
 }
 @keyframes printHead {
-  0%, 100% { transform: translateX(-56px); }
-  50%      { transform: translateX(56px); }
+  0%, 100% { transform: translateX(-52px); }
+  50%      { transform: translateX(52px); }
 }
 @keyframes printBuild {
   0%   { height: 0; }
-  60%  { height: 92px; }
-  86%  { height: 92px; }
+  62%  { height: 70px; }
+  88%  { height: 70px; }
   100% { height: 0; }
 }
 
-/* -- Logiciels & applis : le code s'écrit ligne par ligne -- */
+/* -- Logiciels & applis : de vraies lignes de code qui s'écrivent -- */
 .anim-code {
   display: flex; align-items: center; justify-content: center;
   background:
-    radial-gradient(ellipse 80% 80% at 80% 0%, rgba(20, 184, 166, 0.30), transparent),
+    radial-gradient(ellipse 80% 80% at 80% 0%, rgba(20, 184, 166, 0.26), transparent),
     linear-gradient(150deg, var(--bleu-fonce), var(--bleu));
 }
 .anim-code .code-window {
-  width: 78%; max-width: 300px; height: 150px;
-  background: rgba(9, 32, 52, 0.55);
+  width: 82%; max-width: 320px; height: 160px;
+  background: rgba(8, 26, 44, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  border-radius: 12px; box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
   display: flex; flex-direction: column; overflow: hidden;
 }
 .anim-code .code-bar {
   display: flex; gap: 6px; align-items: center;
-  padding: 9px 12px; background: rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  padding: 8px 12px; background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
 }
 .anim-code .code-bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, 0.4); }
 .anim-code .code-bar i:nth-child(1) { background: #ff6b6b; }
 .anim-code .code-bar i:nth-child(2) { background: #ffd36b; }
 .anim-code .code-bar i:nth-child(3) { background: #3ee6c9; }
+.anim-code .code-file {
+  margin-left: auto; font-style: normal; font-size: 10px; letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "Consolas", "SFMono-Regular", Menlo, monospace;
+}
 .anim-code .code-body {
-  position: relative; flex: 1; padding: 15px 14px;
-  display: flex; flex-direction: column; gap: 10px;
+  margin: 0; flex: 1; padding: 12px 14px;
+  font-family: "Consolas", "SFMono-Regular", Menlo, monospace;
+  font-size: 11.5px; line-height: 1.62; color: #c9dcec;
+  white-space: pre; overflow: hidden;
 }
-.anim-code .code-line {
-  height: 8px; border-radius: 3px;
-  transform: scaleX(0); transform-origin: left center;
-  animation: codeType 5.2s ease infinite;
+.anim-code .cl {
+  display: block; width: -moz-fit-content; width: fit-content;
+  clip-path: inset(0 100% 0 0);
+  animation: codeType 6s ease infinite;
+  animation-delay: var(--d, 0s);
 }
-.anim-code .l1 { width: 58%; background: #8be9d5; animation-delay: 0.2s; }
-.anim-code .l2 { width: 82%; background: rgba(255, 255, 255, 0.55); margin-left: 16px; animation-delay: 1.0s; }
-.anim-code .l3 { width: 46%; background: rgba(255, 255, 255, 0.55); margin-left: 16px; animation-delay: 1.8s; }
-.anim-code .l4 { width: 70%; background: #8be9d5; animation-delay: 2.6s; }
-.anim-code .l5 { width: 40%; background: rgba(255, 255, 255, 0.55); animation-delay: 3.4s; }
-.anim-code .code-cursor {
-  position: absolute; left: 14px; bottom: 15px; width: 7px; height: 12px;
-  background: #3ee6c9; border-radius: 1px;
+.anim-code .c-kw { color: #5ad1bd; }
+.anim-code .c-fn { color: #7fb0ff; }
+.anim-code .c-pr { color: #e6b980; }
+.anim-code .code-cur {
+  display: inline-block; width: 6px; height: 13px; vertical-align: -2px;
+  background: #3ee6c9; margin-left: 1px;
   animation: codeBlink 1.05s steps(1, end) infinite;
 }
 @keyframes codeType {
-  0%   { transform: scaleX(0); }
-  9%   { transform: scaleX(1); }
-  86%  { transform: scaleX(1); }
-  94%  { transform: scaleX(0); }
-  100% { transform: scaleX(0); }
+  0%   { clip-path: inset(0 100% 0 0); }
+  10%  { clip-path: inset(0 0 0 0); }
+  90%  { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 100% 0 0); }
 }
 @keyframes codeBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
 
 /* Respect de la préférence système « animations réduites » (accessibilité) */
 @media (prefers-reduced-motion: reduce) {
   .anim-print .print-head, .anim-print .print-stack,
-  .anim-code .code-line, .anim-code .code-cursor { animation: none; }
-  .anim-print .print-stack { height: 92px; }
-  .anim-code .code-line { transform: scaleX(1); }
-  .anim-code .code-cursor { opacity: 1; }
+  .anim-code .cl, .anim-code .code-cur { animation: none; }
+  .anim-print .print-stack { height: 70px; }
+  .anim-code .cl { clip-path: none; }
+  .anim-code .code-cur { opacity: 1; }
 }
 
 /* ============ Grille 4 colonnes (engagements) ============ */

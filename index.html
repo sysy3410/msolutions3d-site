@@ -109,19 +109,16 @@
         <div class="cards-2col">
           <!-- Pôle impression 3D -->
           <article class="card pole-card reveal">
-            <div class="pole-img pole-anim anim-print" role="img" aria-label="Animation d'une impression 3D en cours de fabrication">
+            <div class="pole-img pole-anim anim-print" role="img" aria-label="Animation technique d'une impression 3D couche par couche">
+              <span class="bp-grid"></span>
               <span class="print-rail"></span>
               <span class="print-head"></span>
               <span class="print-plate"></span>
               <span class="print-stack"><span class="print-inner">
-                <i class="pl" style="width:82px"></i>
-                <i class="pl" style="width:72px"></i>
-                <i class="pl" style="width:60px"></i>
-                <i class="pl" style="width:48px"></i>
-                <i class="pl" style="width:56px"></i>
-                <i class="pl" style="width:64px"></i>
-                <i class="pl" style="width:52px"></i>
-                <i class="pl" style="width:40px"></i>
+                <i style="width:70px"></i><i style="width:67px"></i><i style="width:62px"></i><i style="width:55px"></i><i style="width:48px"></i>
+                <i style="width:42px"></i><i style="width:38px"></i><i style="width:36px"></i><i style="width:38px"></i><i style="width:44px"></i>
+                <i style="width:52px"></i><i style="width:58px"></i><i style="width:60px"></i><i style="width:58px"></i><i style="width:52px"></i>
+                <i style="width:45px"></i><i style="width:38px"></i><i style="width:32px"></i><i style="width:27px"></i><i style="width:22px"></i>
               </span></span>
             </div>
             <div class="pole-body">
@@ -144,18 +141,11 @@
 
           <!-- Pôle logiciels -->
           <article class="card pole-card reveal">
-            <div class="pole-img pole-anim anim-code" role="img" aria-label="Animation : une application dont le code s'écrit ligne par ligne">
-              <span class="code-window">
-                <span class="code-bar"><i></i><i></i><i></i></span>
-                <span class="code-body">
-                  <span class="code-line l1"></span>
-                  <span class="code-line l2"></span>
-                  <span class="code-line l3"></span>
-                  <span class="code-line l4"></span>
-                  <span class="code-line l5"></span>
-                  <span class="code-cursor"></span>
-                </span>
-              </span>
+            <div class="pole-img pole-anim anim-code" role="img" aria-label="Animation : le code d'une application qui s'écrit">
+              <div class="code-window">
+                <div class="code-bar"><i></i><i></i><i></i><em class="code-file">devis.js</em></div>
+                <pre class="code-body"><span class="cl" style="--d:.3s"><span class="c-kw">function</span> <span class="c-fn">devis</span>(pieces) {</span><span class="cl" style="--d:1.2s">  <span class="c-kw">return</span> pieces</span><span class="cl" style="--d:2.1s">    .<span class="c-fn">map</span>(p =&gt; p.<span class="c-pr">prix</span>)</span><span class="cl" style="--d:3s">    .<span class="c-fn">reduce</span>((a, b) =&gt; a + b);</span><span class="cl" style="--d:3.9s">}<span class="code-cur"></span></span></pre>
+              </div>
             </div>
             <div class="pole-body">
               <p class="card-tag">Logiciels &amp; applis</p>
