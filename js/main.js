@@ -1,5 +1,5 @@
 // ============================================================
-// MSolution Software — Script principal
+// MSolutions3D — Script principal
 // ============================================================
 
 // -------- Statistiques de visites (Umami — sans cookie, RGPD) --------

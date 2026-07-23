@@ -1,5 +1,5 @@
 """
-MSolution — couche de données (SQLAlchemy).
+MSolutions3D — couche de données (SQLAlchemy).
 
 Base SQLite unique partagée par le site public, l'espace client et le
 logiciel de gestion. On démarre avec create_all ; les migrations Alembic
@@ -113,7 +113,7 @@ class Settings(Base):
     __tablename__ = "settings"
 
     id = Column(Integer, primary_key=True)
-    company_name = Column(String, default="MSolution")
+    company_name = Column(String, default="MSolutions3D")
     legal_form = Column(String, default="")
     address = Column(String, default="")
     postal_code = Column(String, default="")

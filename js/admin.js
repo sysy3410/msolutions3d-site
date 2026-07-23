@@ -1,5 +1,5 @@
 // ============================================================
-// MSolution — interface d'administration
+// MSolutions3D — interface d'administration
 // ============================================================
 
 (function () {

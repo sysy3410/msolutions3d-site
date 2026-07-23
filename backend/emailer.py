@@ -1,5 +1,5 @@
 """
-MSolution — envoi d'e-mails.
+MSolutions3D — envoi d'e-mails.
 
 En production : configurez ces variables d'environnement (SMTP de votre
 service, ex. Brevo/Mailjet, ou boîte OVH/Outlook) :

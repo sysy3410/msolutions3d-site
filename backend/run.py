@@ -1,4 +1,4 @@
-"""Point d'entrée pour lancer le serveur du site MSolution."""
+"""Point d'entrée pour lancer le serveur du site MSolutions3D."""
 import uvicorn
 
 if __name__ == "__main__":

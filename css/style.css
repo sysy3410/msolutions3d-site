@@ -1,5 +1,5 @@
 /* ============================================================
-   MSolution Software — Feuille de style principale
+   MSolutions3D — Feuille de style principale
    ============================================================ */
 
 :root {
@@ -683,6 +683,18 @@ main.section h2 {
 
 @media (max-width: 640px) {
   .cards-4col, .steps, .materials { grid-template-columns: 1fr; }
+
+  /* Espacements resserrés sur mobile */
+  .section { padding-block: 3rem; }
+  .section-title { margin-bottom: 1.6rem; }
+
+  /* Boutons d'action pleine largeur (zone de tap confortable) */
+  .hero-actions { gap: 0.7rem; }
+  .hero-actions .btn { flex: 1 1 100%; text-align: center; }
+  .section-contact .btn-lg { display: block; width: 100%; box-sizing: border-box; text-align: center; }
+
+  /* Pied de page centré */
+  .footer-inner { justify-content: center; text-align: center; }
 }
 
 @media (max-width: 760px) {

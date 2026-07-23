@@ -1,5 +1,5 @@
 // ============================================================
-// MSolution — chargement dynamique du portfolio
+// MSolutions3D — chargement dynamique du portfolio
 // Récupère les projets via l'API et remplit les grilles des pages
 // « Impression 3D » (réalisations) et « Logiciels » (projets).
 // ============================================================

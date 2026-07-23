@@ -1,5 +1,5 @@
 """
-MSolution — sécurité : hachage de mots de passe, jetons de session
+MSolutions3D — sécurité : hachage de mots de passe, jetons de session
 signés (HMAC, avec rôle et expiration) et dépendances d'authentification.
 """
 

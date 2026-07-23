@@ -1,5 +1,5 @@
 """
-MSolution — backend de la plateforme.
+MSolutions3D — backend de la plateforme.
 
 Sert le site statique + l'API : portfolio public, comptes (admin/clients),
 connexion sécurisée, réinitialisation de mot de passe, gestion des clients.
@@ -114,7 +114,7 @@ def _ensure_admin_and_seed() -> None:
         db.add(admin)
         db.commit()
         print("=" * 64)
-        print(" MSolution — compte administrateur")
+        print(" MSolutions3D — compte administrateur")
         print(f"   Identifiant (e-mail) : {DEFAULT_ADMIN_EMAIL.lower()}")
         if LEGACY_ADMIN.exists():
             print("   Mot de passe : inchangé (celui déjà défini).")
@@ -343,7 +343,7 @@ _DUMMY_HASH = hash_password("x")
 # --------------------------------------------------------------------------
 # Application
 # --------------------------------------------------------------------------
-app = FastAPI(title="MSolution — plateforme", docs_url=None, redoc_url=None)
+app = FastAPI(title="MSolutions3D — plateforme", docs_url=None, redoc_url=None)
 
 
 # Origine du service de statistiques (Umami), autorisée dans la CSP si définie.
@@ -370,7 +370,7 @@ async def security_headers(request: Request, call_next):
         f"connect-src 'self'{extra}; "
         "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
     )
-    response.headers["Server"] = "MSolution"
+    response.headers["Server"] = "MSolutions3D"
     return response
 
 
@@ -425,10 +425,10 @@ def password_reset_request(request: Request, email: str = Form(...),
         link = f"{base}/reinitialiser-mot-de-passe.html?token={token}"
         send_email(
             user.email,
-            "MSolution — réinitialisation de votre mot de passe",
+            "MSolutions3D — réinitialisation de votre mot de passe",
             f"Bonjour,\n\nPour définir un nouveau mot de passe, cliquez sur ce lien "
             f"(valable 2 heures) :\n{link}\n\nSi vous n'êtes pas à l'origine de cette "
-            f"demande, ignorez cet e-mail.\n\nL'équipe MSolution",
+            f"demande, ignorez cet e-mail.\n\nL'équipe MSolutions3D",
         )
     # Réponse identique que l'e-mail existe ou non (anti-énumération).
     return {"ok": True}
@@ -578,10 +578,10 @@ def create_client(
         invite_link = f"{base}/reinitialiser-mot-de-passe.html?token={token}"
         send_email(
             user.email,
-            "MSolution — votre espace client",
+            "MSolutions3D — votre espace client",
             f"Bonjour {user.name or ''},\n\nUn espace client a été créé pour vous sur "
-            f"MSolution. Définissez votre mot de passe ici (lien valable 7 jours) :\n"
-            f"{invite_link}\n\nÀ bientôt,\nL'équipe MSolution",
+            f"MSolutions3D. Définissez votre mot de passe ici (lien valable 7 jours) :\n"
+            f"{invite_link}\n\nÀ bientôt,\nL'équipe MSolutions3D",
         )
 
     result = user_dict(user)
@@ -854,10 +854,10 @@ def admin_send_message(cid: int, request: Request, body: str = Form(...),
     db.add(m); db.commit(); db.refresh(m)
     base = str(request.base_url).rstrip("/")
     send_email(
-        c.email, "MSolution — nouveau message",
+        c.email, "MSolutions3D — nouveau message",
         f"Bonjour,\n\nVous avez reçu un nouveau message sur votre espace client :\n\n"
         f"{body.strip()}\n\nPour répondre, connectez-vous : {base}/espace-client.html\n\n"
-        f"L'équipe MSolution",
+        f"L'équipe MSolutions3D",
     )
     return message_dict(m)
 
@@ -886,7 +886,7 @@ def client_send_message(request: Request, body: str = Form(...),
         base = str(request.base_url).rstrip("/")
         who = user.name or user.company or user.email
         send_email(
-            admin.email, f"MSolution — nouveau message de {who}",
+            admin.email, f"MSolutions3D — nouveau message de {who}",
             f"{who} vous a écrit sur l'espace client :\n\n{body.strip()}\n\n"
             f"Pour répondre : {base}/admin.html (onglet Messages)",
         )
@@ -1158,7 +1158,7 @@ def write_settings(
     next_devis_number: int = Form(1), devis_validity_days: int = Form(30),
 ):
     s = get_settings(db)
-    s.company_name = company_name.strip() or "MSolution"
+    s.company_name = company_name.strip() or "MSolutions3D"
     s.legal_form, s.address = legal_form.strip(), address.strip()
     s.postal_code, s.city = postal_code.strip(), city.strip()
     s.siret, s.vat_number, s.ape_code = siret.strip(), vat_number.strip(), ape_code.strip()
@@ -1270,7 +1270,7 @@ def generate_invoice_pdf(inv: Invoice, client: User, s: Settings, kind: str = "f
     pdf.set_xy(name_x, 15)
     pdf.set_text_color(*BRAND_BLUE)
     pdf.set_font(FONT, "B", 16)
-    pdf.cell(90, 7, s.company_name or "MSolution", **_NEXT)
+    pdf.cell(90, 7, s.company_name or "MSolutions3D", **_NEXT)
     pdf.set_font(FONT, "", 8)
     pdf.set_text_color(*GREY)
     emit = []
@@ -1725,14 +1725,14 @@ def admin_send_document(iid: int, request: Request, _admin: User = Depends(requi
     base = str(request.base_url).rstrip("/")
     is_devis = inv.kind == "devis"
     label = "devis" if is_devis else "facture"
-    subject = f"MSolution — {'Devis' if is_devis else 'Facture'} {inv.number}"
+    subject = f"MSolutions3D — {'Devis' if is_devis else 'Facture'} {inv.number}"
     body = (
         f"Bonjour {client.name or ''},\n\n"
         f"Veuillez trouver ci-joint votre {label} {inv.number}"
         f"{' (montant : ' + inv.amount + ')' if inv.amount else ''}.\n\n"
         + ("Vous pouvez le consulter et l'accepter depuis votre espace client : "
            if is_devis else "Vous pouvez le retrouver dans votre espace client : ")
-        + f"{base}/espace-client.html\n\nCordialement,\nL'équipe MSolution"
+        + f"{base}/espace-client.html\n\nCordialement,\nL'équipe MSolutions3D"
     )
     data = (INVOICE_DIR / inv.file).read_bytes()
     send_email(client.email, subject, body, attachment=(f"{label}-{inv.number or inv.id}.pdf", data))
@@ -1753,7 +1753,7 @@ def client_accept_devis(oid: int, user: User = Depends(get_current_user), db: Se
     admin = db.query(User).filter(User.role == "admin").first()
     if admin:
         who = user.name or user.company or user.email
-        send_email(admin.email, f"MSolution — devis accepté par {who}",
+        send_email(admin.email, f"MSolutions3D — devis accepté par {who}",
                    f"{who} a accepté le devis de la commande « {o.title} » "
                    f"(réf. {o.reference or o.id}). La commande est passée en « Validée ».")
     return order_dict(o)
